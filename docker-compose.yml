@@ -4,7 +4,9 @@ services:
   backend:
     env_file:
       - ./.env
-    image: backend
+    build:
+        context: ./backend
+        dockerfile: Dockerfile
     networks:
       - chosen-network
     command: uvicorn app.main:app --host 0.0.0.0 --port 8080 --reload
