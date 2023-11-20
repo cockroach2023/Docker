@@ -1,0 +1,40 @@
+version: "3.7"
+
+services:
+  backend:
+    env_file:
+      - ./.env
+    build:
+        context: ./backend
+        dockerfile: Dockerfile
+    networks:
+      - chosen-network
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8080 --reload
+    ports:
+      - 8080:8080
+    volumes:
+      - ./backend/app:/code/app
+
+  frontend:
+    container_name: frontend
+    build:
+      # context : 현재 폴더의 frontend 폴더에 있는 도커파일을 쓰겠다.
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    command: [ "npm", "run", "dev"]
+    # command : 컨테이너가 띄워질 때 실행하는 명령어 / 서버실행
+    restart: always
+    ports:
+      - 5173:5173
+    volumes:
+      - ./frontend/src:/frontend/src # 가상 네트워크 연결
+    networks:
+      - chosen-network
+    tty: true
+    stdin_open: true
+    depends_on:
+      - backend
+
+networks:
+  chosen-network:
+    driver: bridge
