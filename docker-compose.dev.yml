@@ -4,6 +4,8 @@ services:
   backend:
     env_file:
       - ./.env
+    environment:
+      TZ: "Asia/Seoul"
     build:
         context: ./backend
         dockerfile: Dockerfile
@@ -17,6 +19,8 @@ services:
 
   frontend:
     container_name: frontend
+    environment:
+      TZ: "Asia/Seoul"
     build:
       # context : 현재 폴더의 frontend 폴더에 있는 도커파일을 쓰겠다.
       context: ./frontend
